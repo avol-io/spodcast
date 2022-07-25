@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json",
+  "version": 2,
+  "projects": {
+    "spodcast": "apps/spodcast",
+    "spodcast-e2e": "apps/spodcast-e2e"
+  }
+}
