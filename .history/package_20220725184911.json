@@ -4,22 +4,12 @@
   "license": "MIT",
   "scripts": {
     "ng": "nx",
-    "prepare": "husky install",
     "postinstall": "node ./decorate-angular-cli.js && ngcc --properties es2020 browser module main",
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test"
   },
   "private": true,
-  "lint-staged": {
-    "*.ts": [
-      "prettier --write",
-      "tslint --fix"
-    ],
-    "*.html":[
-      "prettier --write"
-    ]
-  },
   "dependencies": {
     "@angular/animations": "~14.0.0",
     "@angular/common": "~14.0.0",

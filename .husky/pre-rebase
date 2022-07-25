@@ -1,0 +1,12 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+branch=$(git symbolic-ref --short -q HEAD)
+
+
+if [[ $branch =~ .*feature.* ]]; then
+  echo "Okay su feature branch puoi usare il rebase. Ma fai attenzione!"
+else
+  echo '\n!!!!!!!!!!!!!!!!!!!!!!\n non usare il rebase\n!!!!!!!!!!!!!!!!!!!!!!\n';exit -1;
+fi
+
