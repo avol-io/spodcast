@@ -3,6 +3,8 @@
   "version": 2,
   "projects": {
     "auth": "libs/auth",
+    "shared": "libs/shared",
+    "shows": "libs/shows",
     "spodcast": "apps/spodcast",
     "spodcast-e2e": "apps/spodcast-e2e",
     "user": "libs/user"
