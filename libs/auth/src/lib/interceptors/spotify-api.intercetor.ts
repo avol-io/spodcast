@@ -76,7 +76,7 @@ export class SpotifyApiInterceptor implements HttpInterceptor {
 
       case 401:
       case 403:
-        this.auth.logout();
+        this.auth.logout(true);
         break;
       default:
         error.status = httpError.status;

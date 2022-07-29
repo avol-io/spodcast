@@ -1,19 +1,20 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, Observable, of } from 'rxjs';
+import { SPOTIFY_CONF } from '@spodcast/shared';
+import { debounceTime, map, Observable, of } from 'rxjs';
 import { AuthInfo } from '../models/auth.model';
 
-import { SPOTIFY_CONF } from '../spotify.conf';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthorizationService {
   private authInfo: AuthInfo | undefined = undefined;
-  private storageKey = 'spodcastAuth';
+  private NO_AUTH_KEY = 'spodcastAuth';
+  private NO_AUTH_CALLBACK_KEY = 'spodcastCallback';
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) {
-    const authInfo = localStorage.getItem(this.storageKey);
+    const authInfo = localStorage.getItem(this.NO_AUTH_KEY);
     if (authInfo) {
       this.authInfo = JSON.parse(authInfo);
     }
@@ -23,9 +24,12 @@ export class AuthorizationService {
     return this.authInfo;
   }
 
-  logout() {
+  logout(noAuth = false) {
     localStorage.clear();
     this.authInfo = undefined;
+    if (noAuth) {
+      localStorage.setItem(this.NO_AUTH_CALLBACK_KEY, window.location.pathname + window.location.search);
+    }
     this.router.navigate(['no-auth']);
   }
 
@@ -49,7 +53,7 @@ export class AuthorizationService {
       body.set('code_verifier', 'fa5e962e91863cc3c04282bf4f732dc6017b0dec96ba91a785ff982b81d73783');
       console.log('to access token');
       return this.http
-        .post(SPOTIFY_CONF.SPOTIFY_ACCESS_TOKEN_URL, body.toString(), {
+        .post(SPOTIFY_CONF.API.ACCESS_TOKEN_URL, body.toString(), {
           headers: new HttpHeaders()
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .set('Authorization', 'Basic ' + btoa(SPOTIFY_CONF.CLIENT_ID + ':' + SPOTIFY_CONF.SECRET)),
@@ -63,24 +67,27 @@ export class AuthorizationService {
               refreshToken: response['refresh_token'],
             };
             console.log('navigate');
-            localStorage.setItem(this.storageKey, JSON.stringify(this.authInfo));
-            this.router.navigateByUrl('/');
+            localStorage.setItem(this.NO_AUTH_KEY, JSON.stringify(this.authInfo));
+            const callback = localStorage.getItem(this.NO_AUTH_CALLBACK_KEY) || '/';
+            this.router.navigateByUrl(callback);
             return this.authInfo;
           })
         );
     }
 
-    return of({ accessToken: 'error', tokenType: 'error', expiresIn: -1, refreshToken: 'error' });
+    return of({ accessToken: 'error', tokenType: 'error', expiresIn: -1, refreshToken: 'error' }).pipe(
+      debounceTime(3000)
+    );
   }
 
   private redirectToAuthorizeURL() {
     const params = new URLSearchParams({
       client_id: SPOTIFY_CONF.CLIENT_ID,
       redirect_uri: `${window.location.origin}${SPOTIFY_CONF.CALLBACK}`,
-      scope: encodeURIComponent(SPOTIFY_CONF.SCOPES.join(' ')),
+      scope: SPOTIFY_CONF.SCOPES.join(' '),
       response_type: 'code',
       code_challenge_method: 'fa5e962e91863cc3c04282bf4f732dc6017b0dec96ba91a785ff982b81d73783',
     });
-    window.location.href = `${SPOTIFY_CONF.SPOTIFY_AUTHORIZE_URL}?${params.toString()}`;
+    window.location.href = `${SPOTIFY_CONF.API.AUTHORIZE_URL}?${params.toString()}`;
   }
 }
