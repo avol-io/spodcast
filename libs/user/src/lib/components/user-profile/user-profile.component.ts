@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../user.service';
+import { UserService } from '@spodcast/shared';
 
 @Component({
   selector: 'spodcast-user-profile',
@@ -7,7 +7,7 @@ import { UserService } from '../../user.service';
   styleUrls: ['./user-profile.component.scss'],
 })
 export class UserProfileComponent implements OnInit {
-  userInfo: any;
+  userInfo: SpotifyApi.UserObjectPublic | undefined = undefined;
   constructor(private userService: UserService) {
     //
   }
