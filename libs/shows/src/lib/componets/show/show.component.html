@@ -1,0 +1,22 @@
+<p>show works!</p>
+
+<ng-container *ngIf="show">
+  <div>
+    <div>{{ show.name }}</div>
+    <div>{{ show.description }}</div>
+    <div>
+      <ul>
+        <li *ngFor="let e of show.episodes.items; trackBy: identifyEpisode">
+          <b>{{ e.name }}</b
+          >({{ e.release_date }})<br />
+          ({{ e | listened }})
+          <div class="description ellipsis">
+            {{ e.description | ellipsis: 150 }}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <button type="button" (click)="loadNext(show.episodes.next)" *ngIf="show.episodes.next">Load more</button>
+  {{ show | json }}
+</ng-container>

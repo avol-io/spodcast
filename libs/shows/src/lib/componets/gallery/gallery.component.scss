@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+.cover{
+  object-fit: cover;
+  width: 100%;
+}
+.gallery{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding:1em;
+  gap: 1em;
+}
+.show{
+  box-shadow: inset 0 0 0 1px red;
+  
+}
