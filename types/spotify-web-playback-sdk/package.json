@@ -1,0 +1,70 @@
+{
+  "_from": "@types/spotify-web-playback-sdk",
+  "_id": "@types/spotify-web-playback-sdk@0.1.12",
+  "_inBundle": false,
+  "_integrity": "sha512-qlKVNdHiQLSztUoMTz7Zo8Dxmzcd1k89Ct2XsNMVl8BfCzotovae/hSLvHPoua/N8i592LZ1q0SsgtQH6JT+vA==",
+  "_location": "/@types/spotify-web-playback-sdk",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@types/spotify-web-playback-sdk",
+    "name": "@types/spotify-web-playback-sdk",
+    "escapedName": "@types%2fspotify-web-playback-sdk",
+    "scope": "@types",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/@types/spotify-web-playback-sdk/-/spotify-web-playback-sdk-0.1.12.tgz",
+  "_shasum": "e1178736dc76fee5c151a79d94913d522e8f1cd2",
+  "_spec": "@types/spotify-web-playback-sdk",
+  "_where": "/Users/ale/6 Repository/github/spodcast",
+  "bugs": {
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "Festify Dev Team",
+      "url": "https://github.com/Festify"
+    },
+    {
+      "name": "Marcus Weiner",
+      "url": "https://github.com/mraerino"
+    },
+    {
+      "name": "Moritz Gunz",
+      "url": "https://github.com/NeoLegends"
+    },
+    {
+      "name": "Daniel Almaguer",
+      "url": "https://github.com/deini"
+    },
+    {
+      "name": "Hanna Becker",
+      "url": "https://github.com/hanna-becker"
+    }
+  ],
+  "dependencies": {},
+  "deprecated": false,
+  "description": "TypeScript definitions for spotify-web-playback-sdk",
+  "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/spotify-web-playback-sdk",
+  "license": "MIT",
+  "main": "",
+  "name": "@types/spotify-web-playback-sdk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+    "directory": "types/spotify-web-playback-sdk"
+  },
+  "scripts": {},
+  "typeScriptVersion": "3.7",
+  "types": "index.d.ts",
+  "typesPublisherContentHash": "647618638f846ad0b1806f5ec70176df9fa324471ac2daed18c64034009fceee",
+  "version": "0.1.12"
+}

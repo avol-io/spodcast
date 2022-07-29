@@ -1,0 +1,66 @@
+{
+  "_from": "@types/spotify-api",
+  "_id": "@types/spotify-api@0.0.16",
+  "_inBundle": false,
+  "_integrity": "sha512-5tzZ8cJe2Wv5zjhBLXi7gJObp/kzuG10FwMKPqNtmG9HFWlXKvqBhd0Z+T5Oa0yhkSX1u8Y+bBUhUEPmZpGpDQ==",
+  "_location": "/@types/spotify-api",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@types/spotify-api",
+    "name": "@types/spotify-api",
+    "escapedName": "@types%2fspotify-api",
+    "scope": "@types",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/@types/spotify-api/-/spotify-api-0.0.16.tgz",
+  "_shasum": "4f509ab1883af6d20cd79d518df11d08232009bb",
+  "_spec": "@types/spotify-api",
+  "_where": "/Users/ale/6 Repository/github/spodcast",
+  "bugs": {
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "Niels Kristian Hansen Skovmand",
+      "url": "https://github.com/skovmand"
+    },
+    {
+      "name": "Magnar Ovedal Myrtveit",
+      "url": "https://github.com/Stadly"
+    },
+    {
+      "name": "Nils Måsén",
+      "url": "https://github.com/piksel"
+    },
+    {
+      "name": "Basti Ortiz",
+      "url": "https://github.com/Some-Dood"
+    }
+  ],
+  "dependencies": {},
+  "deprecated": false,
+  "description": "TypeScript definitions for The Spotify Web API (including changes March 29th 2016)",
+  "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/spotify-api",
+  "license": "MIT",
+  "main": "",
+  "name": "@types/spotify-api",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+    "directory": "types/spotify-api"
+  },
+  "scripts": {},
+  "typeScriptVersion": "3.9",
+  "types": "index.d.ts",
+  "typesPublisherContentHash": "f2785b97da2c1c5d6f64526f351ae64f6912fd5d16fe24a5efde914b5b3f1cef",
+  "version": "0.0.16"
+}
