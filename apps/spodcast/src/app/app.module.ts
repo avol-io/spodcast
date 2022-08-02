@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AuthModule, AuthResolver } from '@spodcast/auth';
+import { PlaylistModule } from '@spodcast/playlist';
 import { SharedModule } from '@spodcast/shared';
 import { AppComponent } from './app.component';
 import { LayoutComponent } from './componets/layout/layout.component';
@@ -16,6 +17,7 @@ import { NxWelcomeComponent } from './nx-welcome.component';
     HttpClientModule,
     AuthModule,
     SharedModule,
+    PlaylistModule,
     RouterModule.forRoot([
       {
         path: '',

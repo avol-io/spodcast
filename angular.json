@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "auth": "libs/auth",
+    "playlist": "libs/playlist",
     "shared": "libs/shared",
     "shows": "libs/shows",
     "spodcast": "apps/spodcast",

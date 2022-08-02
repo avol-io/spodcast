@@ -32,7 +32,9 @@ export const SPOTIFY_CONF = {
     ME: 'https://api.spotify.com/v1/me',
     SHOWS: 'https://api.spotify.com/v1/me/shows',
     SHOW_DETAIL: 'https://api.spotify.com/v1/shows/:ID_SHOW',
-    PLAYLIST: 'https://api.spotify.com/v1/me/playlists',
-    PLAYLIST_CREATE: 'https://developer.spotify.com/web-api/create-playlist/',
+    PLAYLISTS_BY_USER: 'https://api.spotify.com/v1/me/playlists',
+    PLAYLIST_GET: 'https://api.spotify.com/v1/playlists/:ID',
+    PLAYLIST_CREATE: 'https://api.spotify.com/v1/users/:ID_USER/playlists',
+    PLAYLIST_GET_TRACKS: 'https://api.spotify.com/v1/playlists/:ID/tracks',
   },
 };
