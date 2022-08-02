@@ -1,0 +1,16 @@
+<div *ngIf="loading">loading</div>
+
+<div *ngIf="!loading && !playlistLoaded">
+  You must create playlist
+  <button (click)="createPlaylist()">create now</button>
+</div>
+
+<div *ngIf="!loading && playlistLoaded">
+  <div><button (click)="checkPlaylist()">Refresh</button></div>
+  <div *ngFor="let e of playlistLoaded.tracks; let i = index; let first = first; let last = last">
+    {{ e.name }}
+    <button (click)="deleteEpisode(e)">Delete</button>
+    <button (click)="move(i, i - 1)" *ngIf="!first">Up</button>
+    <button (click)="move(i, i + 2)" *ngIf="!last">Down</button>
+  </div>
+</div>
