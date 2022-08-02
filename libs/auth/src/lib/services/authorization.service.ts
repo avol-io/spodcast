@@ -10,11 +10,12 @@ import { AuthInfo } from '../models/auth.model';
 })
 export class AuthorizationService {
   private authInfo: AuthInfo | undefined = undefined;
-  private NO_AUTH_KEY = 'spodcastAuth';
+  private AUTH_KEY = 'spodcastAuth';
   private NO_AUTH_CALLBACK_KEY = 'spodcastCallback';
+  private pathBack: string | undefined;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) {
-    const authInfo = localStorage.getItem(this.NO_AUTH_KEY);
+    const authInfo = localStorage.getItem(this.AUTH_KEY);
     if (authInfo) {
       this.authInfo = JSON.parse(authInfo);
     }
@@ -25,10 +26,14 @@ export class AuthorizationService {
   }
 
   logout(noAuth = false) {
+    if (this.pathBack) {
+      return;
+    }
     localStorage.clear();
     this.authInfo = undefined;
     if (noAuth) {
-      localStorage.setItem(this.NO_AUTH_CALLBACK_KEY, window.location.pathname + window.location.search);
+      this.pathBack = window.location.pathname + window.location.search;
+      localStorage.setItem(this.NO_AUTH_CALLBACK_KEY, this.pathBack);
     }
     this.router.navigate(['no-auth']);
   }
@@ -67,8 +72,9 @@ export class AuthorizationService {
               refreshToken: response['refresh_token'],
             };
             console.log('navigate');
-            localStorage.setItem(this.NO_AUTH_KEY, JSON.stringify(this.authInfo));
+            localStorage.setItem(this.AUTH_KEY, JSON.stringify(this.authInfo));
             const callback = localStorage.getItem(this.NO_AUTH_CALLBACK_KEY) || '/';
+            this.pathBack = undefined;
             this.router.navigateByUrl(callback);
             return this.authInfo;
           })

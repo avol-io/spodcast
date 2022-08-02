@@ -1,12 +1,15 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { AuthorizationService } from '../../services/authorization.service';
 
 @Component({
   templateUrl: './no-auth.component.html',
   styleUrls: ['./no-auth.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class NoAuthComponent implements OnInit {
-  constructor() {}
+export class NoAuthComponent {
+  constructor(private authService: AuthorizationService) {}
 
-  ngOnInit(): void {}
+  reauth() {
+    this.authService.autenticateFlow().subscribe();
+  }
 }
