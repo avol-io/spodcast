@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { PlaylistService } from '@spodcast/playlist';
 import { Subscription } from 'rxjs';
 import { ShowService } from '../../services/show.service';
 
@@ -13,8 +14,13 @@ export class ShowComponent implements OnInit {
   subscriptions: Subscription[] = [];
   idShow: string | undefined;
   show: SpotifyApi.ShowObject | undefined;
-
-  constructor(private activeRoute: ActivatedRoute, private showService: ShowService, private di: ChangeDetectorRef) {}
+  idPlaylist = 'NO CHECK';
+  constructor(
+    private activeRoute: ActivatedRoute,
+    private showService: ShowService,
+    private di: ChangeDetectorRef,
+    private playlistService: PlaylistService
+  ) {}
 
   ngOnInit(): void {
     this.subscriptions.push(
@@ -56,5 +62,12 @@ export class ShowComponent implements OnInit {
         }
       })
     );
+  }
+
+  addToPlaylist(e: any, position: number | undefined = undefined) {
+    console.log(e.uri, position);
+    this.playlistService.addEpisode(e.uri, position).subscribe(() => {
+      alert('addded');
+    });
   }
 }
