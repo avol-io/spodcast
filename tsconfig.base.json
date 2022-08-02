@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@spodcast/auth": ["libs/auth/src/index.ts"],
+      "@spodcast/player": ["libs/player/src/index.ts"],
       "@spodcast/playlist": ["libs/playlist/src/index.ts"],
       "@spodcast/shared": ["libs/shared/src/index.ts"],
       "@spodcast/shows": ["libs/shows/src/index.ts"],
