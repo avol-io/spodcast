@@ -71,7 +71,6 @@ export class AuthorizationService {
               expiresIn: Number(response['expires_in']),
               refreshToken: response['refresh_token'],
             };
-            console.log('navigate');
             localStorage.setItem(this.AUTH_KEY, JSON.stringify(this.authInfo));
             const callback = localStorage.getItem(this.NO_AUTH_CALLBACK_KEY) || '/';
             this.pathBack = undefined;

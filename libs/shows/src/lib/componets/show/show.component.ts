@@ -65,9 +65,8 @@ export class ShowComponent implements OnInit {
   }
 
   addToPlaylist(e: any, position: number | undefined = undefined) {
-    console.log(e.uri, position);
     this.playlistService.addEpisode(e.uri, position).subscribe(() => {
-      alert('addded');
+      alert('added');
     });
   }
 }

@@ -17,7 +17,7 @@ export class PlaylistComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    this.playlistService.checkSpodcastPlaylist().subscribe(() => {
+    this.playlistService.checkSpodcastPlaylist().subscribe((pippo) => {
       this.playlistService.getUpdate().subscribe((playlist) => {
         this.playlistLoaded = playlist;
         this.loading = false;
@@ -34,6 +34,7 @@ export class PlaylistComponent implements OnInit {
   // }
   checkPlaylist() {
     this.loading = true;
+    this.playlistService.refresh();
   }
 
   deleteEpisode(e: SpotifyApi.TrackObjectFull) {
