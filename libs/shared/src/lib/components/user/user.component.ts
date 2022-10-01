@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 
 @Component({
-  selector: 'spodcast-user',
+  selector: 'spoticast-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
 })

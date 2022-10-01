@@ -23,7 +23,7 @@
   "_resolved": "https://registry.npmjs.org/@types/spotify-web-playback-sdk/-/spotify-web-playback-sdk-0.1.12.tgz",
   "_shasum": "e1178736dc76fee5c151a79d94913d522e8f1cd2",
   "_spec": "@types/spotify-web-playback-sdk",
-  "_where": "/Users/ale/6 Repository/github/spodcast",
+  "_where": "/Users/ale/6 Repository/github/spoticast",
   "bugs": {
     "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/issues"
   },

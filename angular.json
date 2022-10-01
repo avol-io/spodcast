@@ -7,8 +7,8 @@
     "playlist": "libs/playlist",
     "shared": "libs/shared",
     "shows": "libs/shows",
-    "spodcast": "apps/spodcast",
-    "spodcast-e2e": "apps/spodcast-e2e",
+    "spoticast": "apps/spoticast",
+    "spoticast-e2e": "apps/spoticast-e2e",
     "user": "libs/user"
   }
 }

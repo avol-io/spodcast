@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "spodcast",
+  "npmScope": "spoticast",
   "affected": {
     "defaultBase": "main"
   },
@@ -42,5 +42,5 @@
       "style": "scss"
     }
   },
-  "defaultProject": "spodcast"
+  "defaultProject": "spoticast"
 }

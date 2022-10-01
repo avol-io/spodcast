@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SharedModule } from '@spodcast/shared';
+import { SharedModule } from '@spoticast/shared';
 
 import { NoAuthComponent } from './components/no-auth/no-auth.component';
 import { PostAuthComponent } from './components/post-auth/post-auth.component';

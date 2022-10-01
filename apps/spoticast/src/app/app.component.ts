@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { AuthorizationService } from '@spodcast/auth';
+import { AuthorizationService } from '@spoticast/auth';
 @Component({
-  selector: 'spodcast-root',
+  selector: 'spoticast-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'spodcast';
+  title = 'spoticast';
 
   constructor(private auth: AuthorizationService) {}
   ngOnInit() {

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '@spodcast/shared';
+import { UserService } from '@spoticast/shared';
 
 @Component({
-  selector: 'spodcast-user-profile',
+  selector: 'spoticast-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
 })

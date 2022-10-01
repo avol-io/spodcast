@@ -2,7 +2,7 @@
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SPOTIFY_CONF, UserService } from '@spodcast/shared';
+import { SPOTIFY_CONF, UserService } from '@spoticast/shared';
 
 @Injectable({
   providedIn: 'root',

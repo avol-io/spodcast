@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SPOTIFY_CONF, UserService } from '@spodcast/shared';
+import { SPOTIFY_CONF, UserService } from '@spoticast/shared';
 import {
   BehaviorSubject,
   catchError,
@@ -33,13 +33,13 @@ export class PlaylistService {
   /**
    * The key use to store playlist
    */
-  private STORAGE_KEY = 'spodcast_playlist';
+  private STORAGE_KEY = 'spoticast_playlist';
 
   private debounceRefresh = new Subject<void>();
 
   constructor(private http: HttpClient, private userService: UserService) {
     //if playlist was stored i use it
-    //note that playlist component call  checkSpodcastPlaylist to be sure that playlist exist (and refresh it)
+    //note that playlist component call  checkspoticastPlaylist to be sure that playlist exist (and refresh it)
     const playlist = localStorage.getItem(this.STORAGE_KEY);
     if (playlist) {
       this.playlistLoaded = JSON.parse(playlist);
@@ -132,7 +132,7 @@ export class PlaylistService {
           catchError((e) => {
             this.playlistLoaded = undefined;
             if (e.status == 404) {
-              return this.findSpodcastPlaylist();
+              return this.findspoticastPlaylist();
             }
             throw e;
           })
@@ -171,7 +171,7 @@ export class PlaylistService {
   }
 
   /**
-   * Convert episode from spotify format to spodcast simplify format
+   * Convert episode from spotify format to spoticast simplify format
    * @param response
    * @returns
    */
@@ -213,17 +213,17 @@ export class PlaylistService {
   }
 
   /**
-   * Create a playlist with SPODCAST name
+   * Create a playlist with spoticast name
    * @returns
    */
   createPlaylist() {
     const userId = this.userService.userProfile?.id || '-1';
     const url = SPOTIFY_CONF.API.PLAYLIST_CREATE.replace(':ID_USER', userId);
     const body = {
-      name: SPOTIFY_CONF.PLAYLIST_SPODCAST,
+      name: SPOTIFY_CONF.PLAYLIST_spoticast,
       public: false,
       collaborative: false,
-      description: 'This playlist is used by Spodcast',
+      description: 'This playlist is used by spoticast',
     };
     return this.http.post<SpotifyApi.CreatePlaylistResponse>(url, body).pipe(
       map((playlist) => {
@@ -238,7 +238,7 @@ export class PlaylistService {
    * This is util method to check if playlist exist on spotify
    * @returns
    */
-  checkSpodcastPlaylist(): Observable<PlaylistModel | undefined> {
+  checkspoticastPlaylist(): Observable<PlaylistModel | undefined> {
     if (this.playlistLoaded) {
       //if it's just loaded (for example from localstorage) it will quickly return it but it will refresh it in background
       return of(this.playlistLoaded).pipe(
@@ -248,14 +248,14 @@ export class PlaylistService {
       );
     }
     //if not playlist it present it will find it
-    return this.findSpodcastPlaylist();
+    return this.findspoticastPlaylist();
   }
 
   /**
-   * Private method with the scope to find the Spodcast playlist in spotify
+   * Private method with the scope to find the spoticast playlist in spotify
    * @returns
    */
-  private findSpodcastPlaylist() {
+  private findspoticastPlaylist() {
     if (this.playlistLoaded) {
       return of(this.playlistLoaded);
     }
@@ -272,7 +272,7 @@ export class PlaylistService {
       switchMap((response) => {
         //search playlist into page received
         const playlistFound = response.items.find((p) => {
-          if (p.name == SPOTIFY_CONF.PLAYLIST_SPODCAST) {
+          if (p.name == SPOTIFY_CONF.PLAYLIST_spoticast) {
             return true;
           } else {
             return false;

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PlaylistService } from '@spodcast/playlist';
+import { PlaylistService } from '@spoticast/playlist';
 import { Subscription } from 'rxjs';
 import { ShowService } from '../../services/show.service';
 

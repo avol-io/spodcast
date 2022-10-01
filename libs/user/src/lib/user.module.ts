@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthModule } from '@spodcast/auth';
+import { AuthModule } from '@spoticast/auth';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({

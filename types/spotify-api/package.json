@@ -23,7 +23,7 @@
   "_resolved": "https://registry.npmjs.org/@types/spotify-api/-/spotify-api-0.0.16.tgz",
   "_shasum": "4f509ab1883af6d20cd79d518df11d08232009bb",
   "_spec": "@types/spotify-api",
-  "_where": "/Users/ale/6 Repository/github/spodcast",
+  "_where": "/Users/ale/6 Repository/github/spoticast",
   "bugs": {
     "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/issues"
   },

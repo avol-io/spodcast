@@ -3,7 +3,7 @@ import { PlaylistModel } from '../../models/playlist.model';
 import { PlaylistService } from '../../services/playlist.service';
 
 @Component({
-  selector: 'spodcast-playlist',
+  selector: 'spoticast-playlist',
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss'],
 })
@@ -17,7 +17,7 @@ export class PlaylistComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    this.playlistService.checkSpodcastPlaylist().subscribe((pippo) => {
+    this.playlistService.checkspoticastPlaylist().subscribe((pippo) => {
       this.playlistService.getUpdate().subscribe((playlist) => {
         this.playlistLoaded = playlist;
         this.loading = false;

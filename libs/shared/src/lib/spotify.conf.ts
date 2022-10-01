@@ -2,7 +2,7 @@ export const SPOTIFY_CONF = {
   CLIENT_ID: 'c3b973e238c64937921eb050c4d57d28',
   SECRET: '867cc31befa345dcbd1178c6b8e51603',
   CALLBACK: `/post-auth`,
-  PLAYLIST_SPODCAST: 'Spodcast',
+  PLAYLIST_spoticast: 'spoticast',
   SCOPES: [
     //Listening History
     'user-read-recently-played',

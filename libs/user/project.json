@@ -1,7 +1,7 @@
 {
   "projectType": "library",
   "sourceRoot": "libs/user/src",
-  "prefix": "spodcast",
+  "prefix": "spoticast",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SPOTIFY_CONF } from '@spodcast/shared';
+import { SPOTIFY_CONF } from '@spoticast/shared';
 import { debounceTime, map, Observable, of } from 'rxjs';
 import { AuthInfo } from '../models/auth.model';
 
@@ -10,8 +10,8 @@ import { AuthInfo } from '../models/auth.model';
 })
 export class AuthorizationService {
   private authInfo: AuthInfo | undefined = undefined;
-  private AUTH_KEY = 'spodcastAuth';
-  private NO_AUTH_CALLBACK_KEY = 'spodcastCallback';
+  private AUTH_KEY = 'spoticastAuth';
+  private NO_AUTH_CALLBACK_KEY = 'spoticastCallback';
   private pathBack: string | undefined;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) {
