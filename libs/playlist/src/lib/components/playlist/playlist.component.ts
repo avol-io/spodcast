@@ -16,8 +16,8 @@ export class PlaylistComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-
-    this.playlistService.checkspoticastPlaylist().subscribe((pippo) => {
+    console.log('caricato playlist component');
+    this.playlistService.checkSpoticastPlaylist().subscribe((pippo) => {
       this.playlistService.getUpdate().subscribe((playlist) => {
         this.playlistLoaded = playlist;
         this.loading = false;

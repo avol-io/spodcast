@@ -3,4 +3,5 @@ export interface PlaylistModel {
   snapshot_id: string;
   tracks: SpotifyApi.TrackObjectFull[];
   nextTrack?: string | null;
+  uri: string;
 }

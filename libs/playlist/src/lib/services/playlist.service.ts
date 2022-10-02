@@ -100,7 +100,7 @@ export class PlaylistService {
    * @returns
    */
   deleteEpisode(uri: string) {
-    const body: any = { tracks: [{ uri: uri }] };
+    const body = { tracks: [{ uri: uri }] };
 
     const url = SPOTIFY_CONF.API.PLAYLIST_GET_TRACKS.replace(':ID', this.playlistLoaded?.id || '');
     //
@@ -114,7 +114,7 @@ export class PlaylistService {
    * @returns
    */
   moveEpisode(atPosition: number, toPosition: number) {
-    const body: any = { range_start: atPosition, insert_before: toPosition };
+    const body = { range_start: atPosition, insert_before: toPosition };
 
     const url = SPOTIFY_CONF.API.PLAYLIST_GET_TRACKS.replace(':ID', this.playlistLoaded?.id || '');
     //
@@ -132,7 +132,7 @@ export class PlaylistService {
           catchError((e) => {
             this.playlistLoaded = undefined;
             if (e.status == 404) {
-              return this.findspoticastPlaylist();
+              return this.findSpoticastPlaylist();
             }
             throw e;
           })
@@ -158,6 +158,7 @@ export class PlaylistService {
             nextTrack: response.tracks.next,
             tracks: tracks,
             snapshot_id: response.snapshot_id,
+            uri: response.uri,
           };
           return playlist;
         }
@@ -227,7 +228,13 @@ export class PlaylistService {
     };
     return this.http.post<SpotifyApi.CreatePlaylistResponse>(url, body).pipe(
       map((playlist) => {
-        this.playlistLoaded = { id: playlist.id, snapshot_id: playlist.snapshot_id, nextTrack: null, tracks: [] };
+        this.playlistLoaded = {
+          id: playlist.id,
+          snapshot_id: playlist.snapshot_id,
+          nextTrack: null,
+          tracks: [],
+          uri: playlist.uri,
+        };
         this.notifyPlaylist.next(this.playlistLoaded);
         return this.playlistLoaded;
       })
@@ -238,7 +245,7 @@ export class PlaylistService {
    * This is util method to check if playlist exist on spotify
    * @returns
    */
-  checkspoticastPlaylist(): Observable<PlaylistModel | undefined> {
+  checkSpoticastPlaylist(): Observable<PlaylistModel | undefined> {
     if (this.playlistLoaded) {
       //if it's just loaded (for example from localstorage) it will quickly return it but it will refresh it in background
       return of(this.playlistLoaded).pipe(
@@ -248,14 +255,14 @@ export class PlaylistService {
       );
     }
     //if not playlist it present it will find it
-    return this.findspoticastPlaylist();
+    return this.findSpoticastPlaylist();
   }
 
   /**
    * Private method with the scope to find the spoticast playlist in spotify
    * @returns
    */
-  private findspoticastPlaylist() {
+  private findSpoticastPlaylist() {
     if (this.playlistLoaded) {
       return of(this.playlistLoaded);
     }
