@@ -1,3 +1,37 @@
-:host {
-  display: block;
+
+spoticast-playlist{
+  .playlist-container{
+      // border: 1px dashed red;
+      // padding: 1em;
+      // display: flex;
+      // flex-direction: column;
+  }
+  .episode{
+      background-color: #efefef;
+      display: flex;
+      flex-direction: row;
+      padding: 1em;
+      border: 1px solid transparent;
+      font-size: 10px;
+      &.active{
+          background-color: #fafafa;
+          border: 1px solid #eee;
+      }
+      &:not(.active):hover{
+          background-color: #efef00;
+      }
+      img{
+        height: 5em;
+      }
+      button{
+        flex:0 1 auto;
+        width:2em
+      }
+      .description{
+        width: 50%;
+        flex: 1 0 auto;
+        margin-left: 8px;
+        margin-right: 8px;
+      }
+  }
 }

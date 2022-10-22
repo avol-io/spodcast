@@ -1,15 +1,60 @@
 :host {
   display: block;
 }
-.layout{
+
+.header {
+  display: block;
+  font-size: 10px;
+  background-color: orange;
+  padding: 0.4em;
+
+  spoticast-user {
+    float: right;
+  }
+}
+
+.layout {
   display: flex;
-  
+  flex-direction: column;
+  // flex-flow: column-reverse;
+  height: calc(100vh - 15px);
+
 }
-.main-container{
+
+.main-container {
   flex: 1 0 auto;
-  width: 100px;
+height: 150px;
+&>*{
+  height: 100%;
+overflow-y: scroll;
+overflow-x: hidden;
 }
-.playlist{
+}
+
+.colonna {
   flex: 0 1 auto;
-  width:20vw;
+  display: flex;
+  flex-direction: column;
+height: 100px;
+
+}
+
+spoticast-device-list {
+  flex: 0 1 auto;
+}
+
+
+@media (orientation: landscape) {
+  .layout {
+    flex-direction: row;
+  }
+
+  .colonna {
+    width: 30vw;
+    padding: 0 0.3em;
+  }
+
+  .main-container {
+    width: 70vw;
+  }
 }

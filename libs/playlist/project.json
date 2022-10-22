@@ -5,7 +5,9 @@
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/playlist"],
+      "outputs": [
+        "coverage/libs/playlist"
+      ],
       "options": {
         "jestConfig": "libs/playlist/jest.config.ts",
         "passWithNoTests": true
@@ -14,7 +16,10 @@
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": ["libs/playlist/**/*.ts", "libs/playlist/**/*.html"]
+        "lintFilePatterns": [
+          "libs/playlist/**/*.ts",
+          "libs/playlist/**/*.html"
+        ]
       }
     }
   },

@@ -5,7 +5,7 @@
 /dist
 /tmp
 /out-tsc
-
+environment.prod.ts
 # dependencies
 node_modules
 

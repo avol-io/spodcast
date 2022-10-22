@@ -13,11 +13,12 @@ export class AuthorizationService {
   private AUTH_KEY = 'spoticastAuth';
   private NO_AUTH_CALLBACK_KEY = 'spoticastCallback';
   private pathBack: string | undefined;
-
+  private timer: any;
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) {
     const authInfo = localStorage.getItem(this.AUTH_KEY);
     if (authInfo) {
       this.authInfo = JSON.parse(authInfo);
+      this.checkRefreshToken();
     }
   }
 
@@ -40,6 +41,11 @@ export class AuthorizationService {
 
   autenticateFlow(): Observable<AuthInfo> {
     if (this.authInfo) {
+      const dueDate = this.authInfo.expiresIn - new Date().valueOf();
+      console.log('token will due', new Date(new Date().valueOf() + dueDate));
+      if (dueDate < 0) {
+        return this.refreshToken(this.authInfo.refreshToken);
+      }
       return of(this.authInfo);
     }
     if (window.location.pathname != SPOTIFY_CONF.CALLBACK) {
@@ -65,10 +71,11 @@ export class AuthorizationService {
         })
         .pipe(
           map((response: any) => {
+            const expireTime = new Date(new Date().valueOf() + response['expires_in'] * 1000).valueOf();
             this.authInfo = {
               accessToken: response['access_token'],
               tokenType: response['token_type'],
-              expiresIn: Number(response['expires_in']),
+              expiresIn: expireTime,
               refreshToken: response['refresh_token'],
             };
             localStorage.setItem(this.AUTH_KEY, JSON.stringify(this.authInfo));
@@ -94,5 +101,49 @@ export class AuthorizationService {
       code_challenge_method: 'fa5e962e91863cc3c04282bf4f732dc6017b0dec96ba91a785ff982b81d73783',
     });
     window.location.href = `${SPOTIFY_CONF.API.AUTHORIZE_URL}?${params.toString()}`;
+  }
+
+  private refreshToken(refreshCode: string) {
+    const body = new URLSearchParams();
+    body.set('grant_type', 'refresh_token');
+
+    body.set('refresh_token', refreshCode);
+    body.set('client_id', SPOTIFY_CONF.CLIENT_ID);
+    console.log('refresh token');
+    return this.http
+      .post(SPOTIFY_CONF.API.ACCESS_TOKEN_URL, body.toString(), {
+        headers: new HttpHeaders()
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .set('Authorization', 'Basic ' + btoa(SPOTIFY_CONF.CLIENT_ID + ':' + SPOTIFY_CONF.SECRET)),
+      })
+      .pipe(
+        map((response: any) => {
+          console.log('eccolo risposta refresh', response);
+          const expireTime = new Date(new Date().valueOf() + response['expires_in'] * 1000).valueOf();
+          this.authInfo = {
+            accessToken: response['access_token'],
+            tokenType: response['token_type'],
+            expiresIn: expireTime,
+            refreshToken: response['refresh_token'] || this.authInfo?.refreshToken,
+          };
+          localStorage.setItem(this.AUTH_KEY, JSON.stringify(this.authInfo));
+          this.checkRefreshToken();
+          return this.authInfo;
+        })
+      );
+  }
+
+  checkRefreshToken() {
+    if (this.authInfo != undefined) {
+      const dueDate = this.authInfo.expiresIn - new Date().valueOf();
+      if (dueDate > 0) {
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
+        this.timer = setTimeout(() => {
+          this.refreshToken(this.authInfo ? this.authInfo.refreshToken : 'nocode').subscribe();
+        }, dueDate);
+      }
+    }
   }
 }

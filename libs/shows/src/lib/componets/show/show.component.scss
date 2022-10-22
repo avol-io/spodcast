@@ -1,12 +1,103 @@
 :host {
   display: block;
 }
-.ellipsis{
+
+.banner{
+  max-height: 30vh;
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  border-bottom: #f5f5f5;
+  margin-bottom: 1em;
+padding: 0.4em 0.2em;
+  .banner-info{
+    flex: 1 0 auto;
+    width: 60%;padding: 0 0.4em;
+    display:flex;
+    flex-direction: column;
+  }
+  .banner-title{
+    flex:0 1 auto;
+    font-size: 18px;
+  }
+  .banner-description{
+    flex:1 0 auto;
+    font-size: 10px;
+    color:#888;
+    overflow-y: scroll;
+    overflow-x: initial;
+    height: 20%;
+  }
+}
+
+.ellipsis {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.description{
+
+.description {
   width: 100%;
   height: 5vh;
   min-height: 5em;
+}
+.cover{
+  object-fit: cover;
+  width: 100%;
+}
+
+
+
+.episode {
+  text-align: left;
+  padding: 0.4em;
+  padding-right: 0.2em;
+  display: flex;
+  flex-direction: row;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  margin-bottom: 0.4em;
+  background: #fafafa;
+  // border: 1px solid transparent;
+  &:hover {
+    // border-color: orange;
+    // opacity: 0.9;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 2px 8px 0px;
+    background-color: white;
+    // transform: scale(120%);
+  }
+
+  .info {
+    flex: 1 0 auto;
+    padding-right: 0.4em;
+    width: 90%;
+  }
+
+  .title {
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .sottotitolo {
+    color: #666;
+    font-size: 10px
+  }
+
+  .description {
+    font-size: 10px;
+    color: darkgray
+  }
+
+  .actions {
+    flex: 0 1 auto;
+    display: flex;
+    flex-direction: column;
+
+    button {
+      flex: 1 0 auto;
+      gap: 8px;
+    }
+  }
+  &.listened {
+    opacity: 0.2;
+    // display: none ;
+  }
 }

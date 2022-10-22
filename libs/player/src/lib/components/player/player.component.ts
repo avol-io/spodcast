@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PlaylistService } from '@spoticast/playlist';
+import { UserService } from '@spoticast/shared';
 import { PlayerService } from '../../services/player.service';
 
 @Component({
@@ -10,9 +11,19 @@ import { PlayerService } from '../../services/player.service';
 })
 export class PlayerComponent {
   playlistId: string | undefined;
-  constructor(private playerService: PlayerService, private playlistService: PlaylistService /*info:InfoService */) {
+  firstEpisode: string | undefined;
+  userId = 'userIDnonCaricato';
+  constructor(
+    private playerService: PlayerService,
+    private playlistService: PlaylistService,
+    private userService: UserService /*info:InfoService */
+  ) {
     this.playlistService.getUpdate().subscribe((playlist) => {
       this.playlistId = playlist?.uri;
+      this.firstEpisode = playlist?.tracks[0].id;
+    });
+    this.userService.getUserProfile().subscribe((user) => {
+      this.userId = user.id;
     });
   }
 
@@ -23,8 +34,25 @@ export class PlayerComponent {
     // this.playerService.seek().subscribe()
   }
   play() {
+    const device = this.playerService.getActiveDevice();
     if (this.playlistId) {
-      this.playerService.play(this.playlistId).subscribe();
+      if (device) {
+        this.playerService.play(this.playlistId).subscribe();
+      } else {
+        console.log(
+          'open',
+          'spotify:user:' +
+            this.userId +
+            ':playlist:' +
+            this.playlistId.replace('spotify:playlist:', '') +
+            ':episode:' +
+            this.firstEpisode?.replace('spotify:episode:', '') +
+            ':play'
+        );
+        window.open(
+          'spotify:user:' + this.userId + ':playlist:' + this.playlistId.replace('spotify:playlist:', '') + ':play'
+        );
+      }
     }
   }
   forward() {

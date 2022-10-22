@@ -1,7 +1,7 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { debounceTime, delay, mergeMap, Observable, of, retryWhen, tap, throwError } from 'rxjs';
-import { spoticastError } from '../models/error.model';
+import { SpoticastError } from '../models/error.model';
 import { AuthorizationService } from '../services/authorization.service';
 @Injectable({
   providedIn: 'root',
@@ -66,7 +66,7 @@ export class SpotifyApiInterceptor implements HttpInterceptor {
   }
 
   manageError(httpError: HttpErrorResponse) {
-    const error: spoticastError = {};
+    const error: SpoticastError = {};
     switch (httpError.status) {
       case 0:
         error.status = 0;

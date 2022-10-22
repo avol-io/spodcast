@@ -5,12 +5,17 @@
   <button (click)="createPlaylist()">create now</button>
 </div>
 
-<div *ngIf="!loading && playlistLoaded">
-  <div><button (click)="checkPlaylist()">Refresh</button></div>
-  <div *ngFor="let e of playlistLoaded.tracks; let i = index; let first = first; let last = last">
-    {{ e.name }}
-    <button (click)="deleteEpisode(e)">Delete</button>
-    <button (click)="move(i, i - 1)" *ngIf="!first">Up</button>
-    <button (click)="move(i, i + 2)" *ngIf="!last">Down</button>
-  </div>
+<div *ngIf="playlistLoaded" class="playlist-container">
+  <spoticast-accordion [title]="'Lista di esecuzione'">
+    <div><button (click)="checkPlaylist()">Refresh</button> <button (click)="checkPlaylist(true)">Pulisci</button></div>
+    <div *ngFor="let e of playlistLoaded.tracks; let i = index; let first = first; let last = last" class="episode">
+      <img [src]="e.images" alt="" />
+      <div class="description">
+        {{ e.name }} ({{ e.resume_point < 0 ? 'Riprodotto' : (e.duration_ms - e.resume_point) / 1000 + 's' }})
+      </div>
+      <button (click)="deleteEpisode(e)">❌</button>
+      <button (click)="move(i, i - 1)" *ngIf="!first">⬆</button>
+      <button (click)="move(i, i + 2)" *ngIf="!last">⬇</button>
+    </div>
+  </spoticast-accordion>
 </div>

@@ -5,7 +5,9 @@
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/shared"],
+      "outputs": [
+        "coverage/libs/shared"
+      ],
       "options": {
         "jestConfig": "libs/shared/jest.config.ts",
         "passWithNoTests": true
@@ -14,7 +16,10 @@
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": ["libs/shared/**/*.ts", "libs/shared/**/*.html"]
+        "lintFilePatterns": [
+          "libs/shared/**/*.ts",
+          "libs/shared/**/*.html"
+        ]
       }
     }
   },

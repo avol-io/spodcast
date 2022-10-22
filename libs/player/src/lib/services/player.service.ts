@@ -45,12 +45,12 @@ export class PlayerService {
     this.device = device;
 
     const url = SPOTIFY_CONF.API.PLAY + '?device_id=' + device.id;
-    const request: SpotifyApi.PlayParameterObject = { device_id: this.device.id || 'no_id' };
+    const request = { device_id: this.device.id || 'no_id' };
 
     const event = { type: PlayerEvents.DEVICE_ACTIVE, payload: this.device, cached: true };
     return this.info.notifyCached<Device>(
       event,
-      this.http.put(url, {}).pipe(
+      this.http.put(url, {}, { params: request }).pipe(
         map(() => {
           return device;
         })
@@ -58,16 +58,24 @@ export class PlayerService {
     );
   }
 
-  play(what: string, itemGoto?: string, position?: number) {
+  play(what: string, where?: string, itemGoto?: string, position?: number) {
     const request: SpotifyApi.PlayParameterObject = { context_uri: what };
+    const query: any = {};
     if (itemGoto) {
       request.offset = { uri: itemGoto };
     }
     if (position) {
       request.position_ms = position;
     }
+
+    if (this.device) {
+      query.device_id = this.device.id + '';
+    }
+    if (where) {
+      query.device_id = where + '';
+    }
     const url = SPOTIFY_CONF.API.PLAY;
-    return this.http.put(url, request).pipe();
+    return this.http.put(url, request, { params: query }).pipe();
   }
 
   next() {
@@ -80,5 +88,9 @@ export class PlayerService {
 
   seek(position: number) {
     return this.http.post(SPOTIFY_CONF.API.SEEK, { position_ms: position, device_id: this.device });
+  }
+
+  getActiveDevice() {
+    return this.device;
   }
 }

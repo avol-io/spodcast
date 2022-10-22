@@ -36,5 +36,11 @@ export const SPOTIFY_CONF = {
     PLAYLIST_GET: 'https://api.spotify.com/v1/playlists/:ID',
     PLAYLIST_CREATE: 'https://api.spotify.com/v1/users/:ID_USER/playlists',
     PLAYLIST_GET_TRACKS: 'https://api.spotify.com/v1/playlists/:ID/tracks',
+    GET_DEVICES: 'https://api.spotify.com/v1/me/player/devices',
+    PLAY: 'https://api.spotify.com/v1/me/player/play',
+    NEXT: 'https://api.spotify.com/v1/me/player/next',
+    PREVIOUS: 'https://api.spotify.com/v1/me/player/previous',
+    SEEK: 'https://api.spotify.com/v1/me/player/seek',
+    EPISODES: 'https://api.spotify.com/v1/episodes',
   },
 };

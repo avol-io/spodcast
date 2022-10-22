@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { PlaylistEpisode } from '../../models/playlist-episode.model';
 import { PlaylistModel } from '../../models/playlist.model';
 import { PlaylistService } from '../../services/playlist.service';
 
@@ -6,6 +7,7 @@ import { PlaylistService } from '../../services/playlist.service';
   selector: 'spoticast-playlist',
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PlaylistComponent implements OnInit {
   playlistLoaded: PlaylistModel | undefined = undefined;
@@ -32,12 +34,12 @@ export class PlaylistComponent implements OnInit {
   // identifyEpisode(index: number, item: SpotifyApi.PlaylistTrackObject) {
   //   return item.id;
   // }
-  checkPlaylist() {
+  checkPlaylist(clean = false) {
     this.loading = true;
-    this.playlistService.refresh();
+    this.playlistService.refresh(clean);
   }
 
-  deleteEpisode(e: SpotifyApi.TrackObjectFull) {
+  deleteEpisode(e: PlaylistEpisode) {
     this.loading = true;
     this.playlistService.deleteEpisode(e.uri).subscribe((done) => {
       alert('Eliminato');

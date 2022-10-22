@@ -5,7 +5,9 @@
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/auth"],
+      "outputs": [
+        "coverage/libs/auth"
+      ],
       "options": {
         "jestConfig": "libs/auth/jest.config.ts",
         "passWithNoTests": true
@@ -14,7 +16,10 @@
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": ["libs/auth/**/*.ts", "libs/auth/**/*.html"]
+        "lintFilePatterns": [
+          "libs/auth/**/*.ts",
+          "libs/auth/**/*.html"
+        ]
       }
     }
   },

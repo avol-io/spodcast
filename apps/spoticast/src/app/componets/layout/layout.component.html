@@ -1,10 +1,13 @@
-<spoticast-user></spoticast-user>
-<hr />
+<div class="header"><b [routerLink]="'/shows'">Spoticast 🤟</b><spoticast-user></spoticast-user></div>
+
 <div class="layout">
   <div class="main-container">
     <router-outlet></router-outlet>
   </div>
-  <div class="playlist">
+  <div class="colonna">
     <spoticast-playlist></spoticast-playlist>
+    <spoticast-device-list></spoticast-device-list>
+    <spoticast-player-premium></spoticast-player-premium>
+    <!-- <spoticast-player></spoticast-player>  -->
   </div>
 </div>

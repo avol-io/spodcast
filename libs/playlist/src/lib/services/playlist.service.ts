@@ -15,6 +15,7 @@ import {
   tap,
   throwError,
 } from 'rxjs';
+import { PlaylistEpisode } from '../models/playlist-episode.model';
 import { PlaylistModel } from '../models/playlist.model';
 
 @Injectable({
@@ -125,10 +126,17 @@ export class PlaylistService {
    * Refresh the playlist.
    * If 404 occur it try to find the playlist before give undefined
    */
-  refresh() {
+  refresh(clean = false) {
     if (this.playlistLoaded) {
       this.getPlaylist(this.playlistLoaded.id)
         .pipe(
+          switchMap((playlists: PlaylistModel | undefined) => {
+            if (clean) {
+              return this.clearPlaylist(playlists);
+            } else {
+              return of(playlists);
+            }
+          }),
           catchError((e) => {
             this.playlistLoaded = undefined;
             if (e.status == 404) {
@@ -140,6 +148,29 @@ export class PlaylistService {
         .subscribe();
     }
   }
+  clearPlaylist(playlists: PlaylistModel | undefined) {
+    if (!playlists) return of();
+    const tracks: any = [];
+    const trackFiltered: PlaylistEpisode[] = [];
+    playlists.tracks.forEach((e) => {
+      if (e.resume_point < 0) {
+        tracks.push({ uri: e.uri });
+      } else {
+        trackFiltered.push(e);
+      }
+    });
+    if (tracks.length > 0) {
+      return this.http
+        .delete(SPOTIFY_CONF.API.PLAYLIST_GET_TRACKS.replace(':ID', playlists.id), { body: { tracks: tracks } })
+        .pipe(
+          tap(() => {
+            playlists.tracks = trackFiltered;
+            this.notifyPlaylist.next(playlists);
+          })
+        );
+    }
+    return of();
+  }
 
   /**
    * Get the playlist from API and convert into our model
@@ -150,23 +181,40 @@ export class PlaylistService {
   getPlaylist(id: string) {
     const url = SPOTIFY_CONF.API.PLAYLIST_GET.replace(':ID', id);
     return this.http.get<SpotifyApi.SinglePlaylistResponse>(url).pipe(
-      map((response) => {
-        if (response) {
-          const tracks: SpotifyApi.TrackObjectFull[] = this.convertEpisodes(response.tracks.items);
-          const playlist: PlaylistModel = {
-            id: response.id,
-            nextTrack: response.tracks.next,
-            tracks: tracks,
-            snapshot_id: response.snapshot_id,
-            uri: response.uri,
-          };
-          return playlist;
-        }
-        return undefined;
+      switchMap((response) => {
+        let ids = '';
+        response.tracks.items.forEach((t) => {
+          ids += t.track?.id + ',';
+        });
+        ids = ids.substring(0, ids.length - 1);
+        // ids=''+response.tracks.items[0].track?.id+','+response.tracks.items[1].track?.id;
+        return this.getPlaylistEpisodes(ids).pipe(
+          map((episodes) => {
+            const playlistTmp: PlaylistModel = {
+              id: response.id,
+              nextTrack: response.tracks.next,
+              tracks: episodes,
+              snapshot_id: response.snapshot_id,
+              uri: response.uri,
+            };
+            return playlistTmp;
+          })
+        );
       }),
+
       tap((broadcastIt) => {
         this.playlistLoaded = broadcastIt;
         this.notifyPlaylist.next(broadcastIt);
+      })
+    );
+  }
+
+  getPlaylistEpisodes(ids: string) {
+    const urlEpisodes = SPOTIFY_CONF.API.EPISODES;
+    return this.http.get<SpotifyApi.MultipleEpisodesResponse>(urlEpisodes, { params: { ids: ids } }).pipe(
+      map((episodes) => {
+        const episodesConverted: PlaylistEpisode[] = this.convertEpisodes(episodes.episodes);
+        return episodesConverted;
       })
     );
   }
@@ -176,14 +224,25 @@ export class PlaylistService {
    * @param response
    * @returns
    */
-  private convertEpisodes(response: SpotifyApi.PlaylistTrackObject[]) {
-    const tracks: SpotifyApi.TrackObjectFull[] = [];
-    response.forEach((t) => {
-      if (t.track) {
-        tracks.push(t.track);
-      }
+  private convertEpisodes(response: SpotifyApi.EpisodeObject[]) {
+    const episodesConverted: PlaylistEpisode[] = [];
+
+    response.forEach((e) => {
+      episodesConverted.push({
+        id: e.id,
+        uri: e.uri,
+        duration_ms: e.duration_ms,
+        is_playable: e.is_playable,
+        description: e.description,
+        html_description: e.html_description,
+        images: e.images[0].url,
+        name: e.name,
+        release_date: e.release_date,
+        resume_point: e.resume_point?.fully_played ? -1 : e.resume_point?.resume_position_ms || 0,
+      });
     });
-    return tracks;
+
+    return episodesConverted;
   }
 
   /**
@@ -201,8 +260,13 @@ export class PlaylistService {
           this.playlistLoaded.nextTrack = response.next;
         }
       }),
-      map((response) => {
-        return this.convertEpisodes(response.items);
+      switchMap((response) => {
+        let ids = '';
+        response.items.forEach((t) => {
+          ids += t.track?.id + ',';
+        });
+        ids = ids.substring(0, ids.length - 1);
+        return this.getPlaylistEpisodes(ids);
       }),
       tap((episodes) => {
         if (this.playlistLoaded) {

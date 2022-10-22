@@ -1,0 +1,15 @@
+.player{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #efefef;
+    background-color: #fafafa;
+    padding: 0.3em;
+    flex-wrap: wrap;
+    
+    button{
+        
+        flex: 1 0 auto ;
+        margin-right: 8px;
+        
+    }
+}

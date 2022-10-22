@@ -1,0 +1,7 @@
+<div class="header" (click)="toggle()">
+  {{ title }}
+  <div class="arrow"><span *ngIf="!open">▼</span><span *ngIf="open">▲</span></div>
+</div>
+<div class="body" [ngClass]="{ show: open }">
+  <ng-content></ng-content>
+</div>

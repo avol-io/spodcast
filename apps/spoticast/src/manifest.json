@@ -1,0 +1,54 @@
+{
+    "name": "Spoticast: a better Spotify podcast experience",
+    "short_name": "Spoticast",
+    "description": "A better Spotify podcast experience",
+    "theme_color": "#ffa500",
+    "background_color": "#ffa500",
+    "display": "standalone",
+    "orientation": "portrait",
+    "scope": "/",
+    "start_url": "/shows",
+    "icons": [
+        {
+            "src": "/assets/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [],
+    "shortcuts": [
+        {
+          "name": "Shows",
+          "short_name": "Shows",
+          "description": "List of followed shows",
+          "url": "/shows",
+          "icons": [{"src": "/assets/icon-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png"}]
+        },
+        {
+            "name": "Search podcast",
+            "short_name": "search",
+            "description": "Search new podcast",
+            "url": "/search",
+            "icons": [{"src": "/assets/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"}]
+          }
+    ]
+  }

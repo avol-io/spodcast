@@ -5,7 +5,9 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/spoticast",
         "index": "apps/spoticast/src/index.html",
@@ -13,9 +15,17 @@
         "polyfills": "apps/spoticast/src/polyfills.ts",
         "tsConfig": "apps/spoticast/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": ["apps/spoticast/src/favicon.ico", "apps/spoticast/src/assets"],
-        "styles": ["apps/spoticast/src/styles.scss"],
-        "scripts": []
+        "assets": [
+          "apps/spoticast/src/favicon.ico",
+          "apps/spoticast/src/assets",
+          "apps/spoticast/src/manifest.json"
+        ],
+        "styles": [
+          "apps/spoticast/src/styles.scss"
+        ],
+        "scripts": [],
+        "serviceWorker": true,
+        "ngswConfigPath": "apps/spoticast/ngsw-config.json"
       },
       "configurations": {
         "production": {
@@ -71,12 +81,17 @@
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": ["apps/spoticast/**/*.ts", "apps/spoticast/**/*.html"]
+        "lintFilePatterns": [
+          "apps/spoticast/**/*.ts",
+          "apps/spoticast/**/*.html"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/spoticast"],
+      "outputs": [
+        "coverage/apps/spoticast"
+      ],
       "options": {
         "jestConfig": "apps/spoticast/jest.config.ts",
         "passWithNoTests": true

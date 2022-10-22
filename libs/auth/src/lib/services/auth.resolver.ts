@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
+import { catchError, Observable } from 'rxjs';
 import { AuthInfo } from '../models/auth.model';
 import { AuthorizationService } from './authorization.service';
 
@@ -15,6 +15,11 @@ export class AuthResolver implements Resolve<AuthInfo> {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): AuthInfo | Observable<AuthInfo> | Promise<AuthInfo> {
-    return this.authService.autenticateFlow();
+    return this.authService.autenticateFlow().pipe(
+      catchError((error) => {
+        this.authService.logout();
+        throw error;
+      })
+    );
   }
 }

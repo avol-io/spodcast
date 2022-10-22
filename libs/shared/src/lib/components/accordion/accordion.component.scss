@@ -1,0 +1,20 @@
+spoticast-accordion{
+    .header{
+        border: 1px solid #66a;
+        background-color: #f2f2f4;
+        margin-bottom: 1em;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
+    .arrow{
+        float: right;
+    }
+    .body{
+        display: none;
+        max-height: 40vh;
+        overflow-y: auto;
+        overflow-x: initial;
+    }
+    .body.show{
+        display: block;
+    }
+}
