@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { EventService } from '@spoticast/shared';
-import { PlayerEvents } from '../../events/player.events';
-import { Device } from '../../models/device.model';
+import { BaseComponent, Device, EventService, EVENT_TYPE, SpoticastStoreService } from '@spoticast/shared';
+
 import { PlayerService } from '../../services/player.service';
 
 @Component({
@@ -10,37 +9,26 @@ import { PlayerService } from '../../services/player.service';
   styleUrls: ['./device-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class DeviceListComponent implements OnInit {
-  devices: Device[] | undefined;
+export class DeviceListComponent extends BaseComponent implements OnInit {
+  devices: Device[] = [];
   deviceActive: Device | undefined;
-  cacheStatus = { devices: false, device: false };
 
-  constructor(private playerService: PlayerService, private info: EventService) {}
+  constructor(private playerService: PlayerService, private event: EventService, private store: SpoticastStoreService) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.info.notifyMe([PlayerEvents.DEVICES_LIST, PlayerEvents.DEVICE_ACTIVE]).subscribe((event) => {
-      switch (event.type) {
-        case PlayerEvents.DEVICES_LIST:
-          this.cacheStatus.devices = !!event.cached;
-          this.manageDevices(event.payload);
-          break;
-        case PlayerEvents.DEVICE_ACTIVE:
-          this.cacheStatus.devices = !!event.cached;
-          this.manageDevice(event.payload);
-          break;
-      }
+    this.destroyForMe = this.store.get('devices').subscribe((devices) => {
+      this.devices = [...devices];
+    });
+    this.destroyForMe = this.store.get('execution').subscribe((execution) => {
+      this.deviceActive = execution.device;
     });
 
-    this.playerService.getDevices().subscribe();
-  }
-  manageDevice(payload: Device) {
-    this.deviceActive = payload;
-  }
-  manageDevices(payload: Device[]) {
-    this.devices = payload;
+    this.event.notifyEvent({ type: EVENT_TYPE.PLAYER_DEVICE_LIST });
   }
 
   changeDevice(device: Device) {
-    this.playerService.changeDevice(device).subscribe();
+    this.event.notifyEvent({ type: EVENT_TYPE.PLAYER_CHANGE_DEVICE, payload: device });
   }
 }

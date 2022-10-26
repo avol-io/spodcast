@@ -3,14 +3,13 @@
     <ng-container *ngIf="devices">
       <div
         *ngFor="let device of devices"
-        [ngClass]="{ active: device.active }"
+        [ngClass]="{ active: deviceActive?.id === device.id }"
         class="device"
         (click)="changeDevice(device)"
       >
         <div class="type">{{ device.type }}</div>
         <div class="name">
           {{ device.name }}
-          <span *ngIf="deviceActive?.id === device.id && cacheStatus.device === true">***</span>
         </div>
       </div>
     </ng-container>

@@ -1,8 +1,6 @@
 <!-- <div class="gallery"> -->
-<ng-container *ngFor="let s of shows?.items">
-  <div class="show" *ngIf="s.show" (click)="selectShow(s.show)" style="background:url({{ s.show.images[0].url }})">
-    <img *ngIf="s.show?.images" class="cover" [src]="s.show.images[0].url" />
+<ng-container *ngFor="let s of shows">
+  <div class="show" (click)="selectShow(s)">
+    <img *ngIf="s.cover" class="cover" [src]="s.cover" />
   </div>
 </ng-container>
-<!-- </div> -->
-<!-- <pre>{{ shows?.items | json }}</pre> -->

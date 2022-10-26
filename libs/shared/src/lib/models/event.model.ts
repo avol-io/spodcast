@@ -1,5 +1,7 @@
+import { EVENT_TYPE } from '../constants/event-type.const';
+
 export interface SpoticastEvent<PayloadType> {
-  type: string;
+  type: EVENT_TYPE;
   payload?: PayloadType;
   cached?: boolean;
 }

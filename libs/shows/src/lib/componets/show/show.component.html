@@ -1,6 +1,6 @@
 <ng-container *ngIf="show">
   <div class="banner">
-    <img *ngIf="show.images" class="cover" [src]="show.images[0].url" />
+    <img *ngIf="show.cover" class="cover" [src]="show.cover" />
     <div class="banner-info">
       <div class="banner-title">{{ show.name }}</div>
       <!-- <spoticast-accordion [title]="'Details'"> -->
@@ -32,6 +32,6 @@
     </div>
   </div>
 
-  <button type="button" (click)="loadNext(show.episodes.next)" *ngIf="show.episodes.next">Load more</button>
+  <button type="button" (click)="loadNext()" *ngIf="show.nextEpisodeURL">Load more</button>
   <!-- {{ show | json }} -->
 </ng-container>

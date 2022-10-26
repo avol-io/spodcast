@@ -1,7 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { PlaylistEpisode } from '../../models/playlist-episode.model';
-import { PlaylistModel } from '../../models/playlist.model';
-import { PlaylistService } from '../../services/playlist.service';
+import {
+  BaseComponent,
+  Episode,
+  EventService,
+  EVENT_TYPE,
+  PlaylistModel,
+  SpoticastStoreService,
+} from '@spoticast/shared';
 
 @Component({
   selector: 'spoticast-playlist',
@@ -9,26 +14,33 @@ import { PlaylistService } from '../../services/playlist.service';
   styleUrls: ['./playlist.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PlaylistComponent implements OnInit {
+export class PlaylistComponent extends BaseComponent implements OnInit {
   playlistLoaded: PlaylistModel | undefined = undefined;
   episodeMap: { [key: string]: boolean } = {};
   loading = true;
 
-  constructor(private playlistService: PlaylistService) {}
+  constructor(private event: EventService, private store: SpoticastStoreService) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loading = true;
     console.log('caricato playlist component');
-    this.playlistService.checkSpoticastPlaylist().subscribe((pippo) => {
-      this.playlistService.getUpdate().subscribe((playlist) => {
-        this.playlistLoaded = playlist;
-        this.loading = false;
-      });
+    this.store.get('playlist').subscribe((playlistLoaded) => {
+      this.playlistLoaded = playlistLoaded;
+      this.loading = false;
     });
+    this.event.notifyEvent({ type: EVENT_TYPE.PLAYLIST_LOAD });
+    // this.playlistService.checkSpoticastPlaylist().subscribe((pippo) => {
+    //   this.playlistService.getUpdate().subscribe((playlist) => {
+    //     this.playlistLoaded = playlist;
+    //     this.loading = false;
+    //   });
+    // });
   }
   createPlaylist() {
     this.loading = true;
-    this.playlistService.createPlaylist().subscribe();
+    this.event.notifyEvent({ type: EVENT_TYPE.PLAYLIST_CREATE });
   }
 
   // identifyEpisode(index: number, item: SpotifyApi.PlaylistTrackObject) {
@@ -36,19 +48,17 @@ export class PlaylistComponent implements OnInit {
   // }
   checkPlaylist(clean = false) {
     this.loading = true;
-    this.playlistService.refresh(clean);
+    this.event.notifyEvent({ type: EVENT_TYPE.PLAYLIST_REFRESH, payload: { clean: clean } });
   }
 
-  deleteEpisode(e: PlaylistEpisode) {
+  deleteEpisode(e: Episode) {
     this.loading = true;
-    this.playlistService.deleteEpisode(e.uri).subscribe((done) => {
-      alert('Eliminato');
-    });
+    this.event.notifyEvent({ type: EVENT_TYPE.EPISODE_REMOVE, payload: e });
   }
 
   move(from: number, to: number) {
     this.loading = true;
-    this.playlistService.moveEpisode(from, to).subscribe();
+    this.event.notifyEvent({ type: EVENT_TYPE.EPISODE_MOVE, payload: { from: from, to: to } });
   }
 
   // loadMore(forceReload = false) {

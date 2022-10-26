@@ -1,4 +1,4 @@
-import { BaseModel } from '@spoticast/shared';
+import { BaseModel } from './base.model';
 
 export class Device extends BaseModel {
   constructor(public dto: SpotifyApi.UserDevice) {
@@ -10,7 +10,7 @@ export class Device extends BaseModel {
   }
 
   get id() {
-    return this.dto.id;
+    return this.dto.id || 'no_id';
   }
   get name() {
     return this.dto.name;

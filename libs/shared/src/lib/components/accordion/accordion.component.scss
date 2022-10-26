@@ -1,4 +1,7 @@
 spoticast-accordion{
+    opacity: 0.97;
+    position: relative;
+display: block;
     .header{
         border: 1px solid #66a;
         background-color: #f2f2f4;
@@ -16,5 +19,9 @@ spoticast-accordion{
     }
     .body.show{
         display: block;
+        position: absolute;
+bottom: 22px;
+z-index: 1;
+background: rgba(255,255,255,0.9);
     }
 }

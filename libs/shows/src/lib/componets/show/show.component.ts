@@ -1,8 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PlaylistService } from '@spoticast/playlist';
+import {
+  BaseComponent,
+  Episode,
+  EventService,
+  EVENT_TYPE as SpotiEventType,
+  Show,
+  SpoticastStoreService,
+} from '@spoticast/shared';
 import { Subscription } from 'rxjs';
-import { ShowService } from '../../services/show.service';
 
 @Component({
   selector: 'shows-show',
@@ -10,63 +16,39 @@ import { ShowService } from '../../services/show.service';
   styleUrls: ['./show.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShowComponent implements OnInit {
-  subscriptions: Subscription[] = [];
-  idShow: string | undefined;
-  show: SpotifyApi.ShowObject | undefined;
-  idPlaylist = 'NO CHECK';
+export class ShowComponent extends BaseComponent implements OnInit {
+  show: Show | undefined; //SpotifyApi.ShowObject
+  subscriptionToShow: Subscription | undefined;
   constructor(
     private activeRoute: ActivatedRoute,
-    private showService: ShowService,
-    private di: ChangeDetectorRef,
-    private playlistService: PlaylistService
-  ) {}
+    private events: EventService,
+    private store: SpoticastStoreService,
+    private di: ChangeDetectorRef
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.activeRoute.params.subscribe((par) => {
-        this.loadShowInfo(par['idShow']);
-      })
-    );
-  }
-
-  loadShowInfo(idShow: string) {
-    this.idShow = idShow;
-    this.subscriptions.push(
-      this.showService.getShow(idShow).subscribe((show) => {
-        this.show = show;
-        this.di.markForCheck();
-      })
-    );
-  }
-
-  ngDestroy() {
-    this.subscriptions.forEach((s) => {
-      if (s && !s.closed) {
-        s.unsubscribe();
+    this.destroyForMe = this.activeRoute.params.subscribe((par) => {
+      this.events.notifyEvent({ type: SpotiEventType.SHOW_LOAD_DETAIL, payload: par['idShow'] });
+      if (this.subscriptionToShow && !this.subscriptionToShow.closed) {
+        this.subscriptionToShow.unsubscribe();
       }
+      this.destroyForMe = this.subscriptionToShow = this.store.get('shows', par['idShow']).subscribe((show) => {
+        this.show = show;
+      });
     });
   }
 
-  identifyEpisode(index: number, item: SpotifyApi.EpisodeObjectSimplified) {
+  identifyEpisode(index: number, item: Episode) {
     return item.id;
   }
 
-  loadNext(next: string) {
-    this.subscriptions.push(
-      this.showService.getNextEpisodes(next).subscribe((episodes) => {
-        if (this.show) {
-          this.show?.episodes.items.push(...episodes.items);
-          this.show.episodes.next = episodes.next;
-          this.di.markForCheck();
-        }
-      })
-    );
+  loadNext() {
+    this.events.notifyEvent({ type: SpotiEventType.EPISODE_NEXT_LOAD, payload: this.show });
   }
 
-  addToPlaylist(e: any, position: number | undefined = undefined) {
-    this.playlistService.addEpisode(e.uri, position).subscribe(() => {
-      alert('added');
-    });
+  addToPlaylist(e: Episode, position: number | undefined = undefined) {
+    this.events.notifyEvent({ type: SpotiEventType.EPISODE_ADD, payload: { episode: e, position: position } });
   }
 }

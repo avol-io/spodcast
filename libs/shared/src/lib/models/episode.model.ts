@@ -1,20 +1,15 @@
-export class EpisodeModel {
-  //use of adapter pattern
-  private dto: SpotifyApi.EpisodeObjectSimplified;
+import { BaseModel } from './base.model';
 
+export class Episode extends BaseModel {
+  protected dto: SpotifyApi.EpisodeObjectSimplified;
   listened;
-  added = false;
 
   constructor(dto: SpotifyApi.EpisodeObjectSimplified) {
+    super();
     this.dto = dto;
-
     this.listened = dto.resume_point?.fully_played
       ? 100
       : Math.round(((dto.resume_point?.resume_position_ms || 0) / dto.duration_ms) * 100);
-  }
-
-  getDto() {
-    return this.dto;
   }
 
   /**

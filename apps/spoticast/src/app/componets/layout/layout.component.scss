@@ -18,24 +18,26 @@
   flex-direction: column;
   // flex-flow: column-reverse;
   height: calc(100vh - 15px);
+  padding-bottom: 2em;
 
 }
 
 .main-container {
   flex: 1 0 auto;
-height: 150px;
-&>*{
-  height: 100%;
-overflow-y: scroll;
-overflow-x: hidden;
-}
+  height: 150px;
+
+  &>* {
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
 }
 
 .colonna {
   flex: 0 1 auto;
   display: flex;
   flex-direction: column;
-height: 100px;
+  height: 100px;
 
 }
 
@@ -47,14 +49,17 @@ spoticast-device-list {
 @media (orientation: landscape) {
   .layout {
     flex-direction: row;
+    padding-bottom: 0.5em;
   }
 
   .colonna {
     width: 30vw;
+    
     padding: 0 0.3em;
   }
 
   .main-container {
     width: 70vw;
+    height: 100%;
   }
 }

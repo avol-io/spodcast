@@ -1,3 +1,4 @@
+/// <reference types="spotify-api" />
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '@spoticast/shared';
 

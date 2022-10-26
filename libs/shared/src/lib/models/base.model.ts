@@ -1,3 +1,7 @@
 export class BaseModel {
-  cached = false;
+  creationDate;
+
+  constructor() {
+    this.creationDate = new Date().getTime();
+  }
 }

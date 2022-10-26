@@ -1,8 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SPOTIFY_CONF, UserService } from '@spoticast/shared';
+
 import {
-  BehaviorSubject,
   catchError,
   concatMap,
   map,
@@ -15,22 +14,16 @@ import {
   tap,
   throwError,
 } from 'rxjs';
-import { PlaylistEpisode } from '../models/playlist-episode.model';
+
 import { PlaylistModel } from '../models/playlist.model';
+import { EventService } from './event.service';
+import { SpoticastStoreService } from './spoticast-store.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlaylistService {
-  /**
-   * It's the cached model of playlist
-   */
-  private playlistLoaded: undefined | PlaylistModel = undefined;
-  /**
-   * it's a broadcast channel to update async all component that want the freshed playlist
-   */
-  private notifyPlaylist: Subject<PlaylistModel | undefined> = new BehaviorSubject(this.playlistLoaded);
-
+  user: any;
   /**
    * The key use to store playlist
    */
@@ -38,36 +31,15 @@ export class PlaylistService {
 
   private debounceRefresh = new Subject<void>();
 
-  constructor(private http: HttpClient, private userService: UserService) {
-    //if playlist was stored i use it
-    //note that playlist component call  checkspoticastPlaylist to be sure that playlist exist (and refresh it)
-    const playlist = localStorage.getItem(this.STORAGE_KEY);
-    if (playlist) {
-      this.playlistLoaded = JSON.parse(playlist);
-      this.notifyPlaylist.next(this.playlistLoaded);
-    }
-
-    //here it subscribe to all playlist cache to update storage copy
-    this.notifyPlaylist.subscribe((playlist) => {
-      if (playlist) {
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(playlist));
-      } else {
-        localStorage.removeItem(this.STORAGE_KEY);
-      }
-    });
-
-    //here a subscribe to debounce refresh
-    this.debounceRefresh /*TODO.pipe(debounceTime(1000*30))*/
-      .subscribe(() => {
-        this.refresh();
-      });
+  constructor(private http: HttpClient, private store: SpoticastStoreService, private event: EventService) {
+    store.get('');
   }
 
   /**
    * Return observable where you can receive the freshed playlist
    * @returns
    */
-  getUpdate(): Observable<PlaylistModel | undefined> {
+  private getUpdate(): Observable<PlaylistModel | undefined> {
     return this.notifyPlaylist.asObservable();
   }
 
@@ -77,7 +49,7 @@ export class PlaylistService {
    * @param position (optional) set the position where the episode will be added
    * @returns
    */
-  addEpisode(uri: string, position: number | undefined = undefined) {
+  private addEpisode(uri: string, position: number | undefined = undefined) {
     const body: any = { uris: [uri] };
     if (position != undefined) {
       body.position = position;
@@ -100,7 +72,7 @@ export class PlaylistService {
    * @param uri spotify uri of episode
    * @returns
    */
-  deleteEpisode(uri: string) {
+  private deleteEpisode(uri: string) {
     const body = { tracks: [{ uri: uri }] };
 
     const url = SPOTIFY_CONF.API.PLAYLIST_GET_TRACKS.replace(':ID', this.playlistLoaded?.id || '');
@@ -114,7 +86,7 @@ export class PlaylistService {
    * @param toPosition
    * @returns
    */
-  moveEpisode(atPosition: number, toPosition: number) {
+  private moveEpisode(atPosition: number, toPosition: number) {
     const body = { range_start: atPosition, insert_before: toPosition };
 
     const url = SPOTIFY_CONF.API.PLAYLIST_GET_TRACKS.replace(':ID', this.playlistLoaded?.id || '');
@@ -126,7 +98,7 @@ export class PlaylistService {
    * Refresh the playlist.
    * If 404 occur it try to find the playlist before give undefined
    */
-  refresh(clean = false) {
+  private refresh(clean = false) {
     if (this.playlistLoaded) {
       this.getPlaylist(this.playlistLoaded.id)
         .pipe(
@@ -148,7 +120,7 @@ export class PlaylistService {
         .subscribe();
     }
   }
-  clearPlaylist(playlists: PlaylistModel | undefined) {
+  private clearPlaylist(playlists: PlaylistModel | undefined) {
     if (!playlists) return of();
     const tracks: any = [];
     const trackFiltered: PlaylistEpisode[] = [];
@@ -178,7 +150,7 @@ export class PlaylistService {
    * @param id of playlist
    * @returns
    */
-  getPlaylist(id: string) {
+  private getPlaylist(id: string) {
     const url = SPOTIFY_CONF.API.PLAYLIST_GET.replace(':ID', id);
     return this.http.get<SpotifyApi.SinglePlaylistResponse>(url).pipe(
       switchMap((response) => {
@@ -209,7 +181,7 @@ export class PlaylistService {
     );
   }
 
-  getPlaylistEpisodes(ids: string) {
+  private getPlaylistEpisodes(ids: string) {
     const urlEpisodes = SPOTIFY_CONF.API.EPISODES;
     return this.http.get<SpotifyApi.MultipleEpisodesResponse>(urlEpisodes, { params: { ids: ids } }).pipe(
       map((episodes) => {
@@ -250,7 +222,7 @@ export class PlaylistService {
    * @param next
    * @returns
    */
-  loadMoreEpisode(next: string) {
+  private loadMoreEpisode(next: string) {
     if (!next) {
       return of(undefined);
     }
@@ -281,7 +253,7 @@ export class PlaylistService {
    * Create a playlist with spoticast name
    * @returns
    */
-  createPlaylist() {
+  private createPlaylist() {
     const userId = this.userService.userProfile?.id || '-1';
     const url = SPOTIFY_CONF.API.PLAYLIST_CREATE.replace(':ID_USER', userId);
     const body = {
@@ -309,7 +281,7 @@ export class PlaylistService {
    * This is util method to check if playlist exist on spotify
    * @returns
    */
-  checkSpoticastPlaylist(): Observable<PlaylistModel | undefined> {
+  private checkSpoticastPlaylist(): Observable<PlaylistModel | undefined> {
     if (this.playlistLoaded) {
       //if it's just loaded (for example from localstorage) it will quickly return it but it will refresh it in background
       return of(this.playlistLoaded).pipe(
