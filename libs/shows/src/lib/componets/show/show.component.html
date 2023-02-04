@@ -5,6 +5,7 @@
       <div class="banner-title">{{ show.name }}</div>
       <!-- <spoticast-accordion [title]="'Details'"> -->
       <div class="banner-description">{{ show.description }}</div>
+      <button (click)="refresh()">Aggiorna</button>
     </div>
   </div>
 
@@ -12,14 +13,12 @@
   <div>
     <div
       class="episode"
-      *ngFor="let e of show.episodes.items; trackBy: identifyEpisode"
-      [ngClass]="{ listened: e.resume_point?.fully_played }"
+      *ngFor="let e of show.episodes; trackBy: identifyEpisode"
+      [ngClass]="{ listened: e.listened>98ng }"
     >
       <div class="info">
         <div class="title">{{ e.name }}</div>
-        <div class="sottotitolo">
-          ({{ e.release_date }}) - listened:({{ e | listened }}) resume:[{{ e.resume_point?.resume_position_ms }}]
-        </div>
+        <div class="sottotitolo">({{ e.releaseDate }}) - listened:({{ e.listened }}) resume:[{{ e.resumeTime }}]</div>
 
         <div class="description ellipsis">
           {{ e.description | ellipsis: 150 }}
