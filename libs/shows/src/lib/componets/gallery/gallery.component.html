@@ -2,5 +2,21 @@
 <ng-container *ngFor="let s of shows">
   <div class="show" (click)="selectShow(s)">
     <img *ngIf="s.cover" class="cover" [src]="s.cover" />
+    <div
+      style="
+        border-radius: 50%;
+        background-color: red;
+        color: white;
+        position: absolute;
+        top: 1em;
+        left: 1em;
+        width: 2em;
+        height: 2em;
+      "
+      *ngIf="s.newEpisode()"
+    >
+      {{ s.newEpisode() }}
+    </div>
   </div>
 </ng-container>
+<button (click)="refreshShows()">Aggiorna</button>

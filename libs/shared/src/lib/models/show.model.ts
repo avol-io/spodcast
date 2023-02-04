@@ -9,4 +9,15 @@ export class Show extends BaseModel {
   description = 'No description';
   cover = './assets/no_cover.png';
   nextEpisodeURL: string | null = null;
+
+  newEpisode() {
+    let count = 0;
+    this.episodes.forEach((e) => {
+      if (e.listened < 98) {
+        count++;
+      }
+    });
+    console.log(count);
+    return count;
+  }
 }

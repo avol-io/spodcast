@@ -3,7 +3,7 @@ export enum EVENT_TYPE {
    * Return the list of shows in the payload
    */
   SHOWS_LOAD_LIST,
-  SHOW_LOAD_DETAIL,
+  SHOW_LOAD_DETAIL, //payload idShow
 
   /**
    * Add the show in the payload to the followed shows
@@ -25,6 +25,10 @@ export enum EVENT_TYPE {
    * Add episode to playlist
    */
   EPISODE_ADD,
+
+  /**
+   * Load the next episodes
+   */
   EPISODE_NEXT_LOAD,
   /**
    * Remove episode from playlist

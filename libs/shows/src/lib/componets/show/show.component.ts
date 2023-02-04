@@ -30,12 +30,17 @@ export class ShowComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.destroyForMe = this.activeRoute.params.subscribe((par) => {
-      this.events.notifyEvent({ type: SpotiEventType.SHOW_LOAD_DETAIL, payload: par['idShow'] });
       if (this.subscriptionToShow && !this.subscriptionToShow.closed) {
         this.subscriptionToShow.unsubscribe();
       }
       this.destroyForMe = this.subscriptionToShow = this.store.get('shows', par['idShow']).subscribe((show) => {
+        console.log('eccolo', show);
         this.show = show;
+        if (!this.show) {
+          console.log('chiama il BE');
+          this.events.notifyEvent({ type: SpotiEventType.SHOW_LOAD_DETAIL, payload: par['idShow'] });
+        }
+        this.di.markForCheck();
       });
     });
   }
@@ -50,5 +55,9 @@ export class ShowComponent extends BaseComponent implements OnInit {
 
   addToPlaylist(e: Episode, position: number | undefined = undefined) {
     this.events.notifyEvent({ type: SpotiEventType.EPISODE_ADD, payload: { episode: e, position: position } });
+  }
+
+  refresh() {
+    this.events.notifyEvent({ type: SpotiEventType.SHOW_LOAD_DETAIL, payload: this.show?.id });
   }
 }

@@ -1,9 +1,9 @@
-import { Episode } from '@spoticast/shared';
+import { Episode } from './episode.model';
 
 export interface PlaylistModel {
   id: string;
   snapshot_id: string;
-  tracks: Episode[];
+  episodes: Episode[];
   next?: string | null;
   uri: string;
 }

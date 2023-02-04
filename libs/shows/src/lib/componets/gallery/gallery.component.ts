@@ -23,16 +23,20 @@ export class GalleryComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.destroyForMe = this.store.get('shows').subscribe((shows) => {
+      console.log('new shows');
+      if (!shows || Object.keys(shows).length == 0) {
+        console.log('chiama il be');
+        this.refreshShows();
+      }
       this.shows = [];
       Object.keys(shows).forEach((key) => {
         this.shows?.push(shows[key]);
       });
       this.shows.sort((a, b) => {
-        return a.episodes[0].releaseDate < b.episodes[0].releaseDate ? -1 : 1;
+        return a.episodes[0].releaseDate < b.episodes[0].releaseDate ? 1 : -1;
       });
       this.di.markForCheck();
     });
-    this.refreshShows();
   }
 
   refreshShows() {

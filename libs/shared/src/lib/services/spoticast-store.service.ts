@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { BehaviorSubject, debounceTime, filter, map, tap } from 'rxjs';
 import { BaseModel } from '../models/base.model';
 import { Device } from '../models/device.model';
 import { Episode } from '../models/episode.model';
 import { PlaylistModel } from '../models/playlist.model';
 import { Show } from '../models/show.model';
+import { User } from '../models/user.model';
 
 export interface SpoticastState {
   shows: { [id: string]: Show };
@@ -14,7 +15,7 @@ export interface SpoticastState {
   playlistEpisodes: { [id: string]: Episode };
   execution: { episode: Episode | undefined; device: Device | undefined; [id: string]: any };
   devices: { [id: string]: Device };
-  user: User;
+  user: User | undefined;
 }
 export type STORE_TOPIC = 'shows' | 'episodes' | 'playlist' | 'execution' | 'devices' | 'user';
 
@@ -30,29 +31,43 @@ export class SpoticastStoreService {
     playlistEpisodes: {},
     execution: { episode: undefined, device: undefined },
     devices: {},
+    user: undefined,
   };
   constructor() {
     this.channel = new BehaviorSubject<SpoticastState>(this.store);
+    (window as any)['store'] = this;
   }
 
   get(topic: STORE_TOPIC, id?: string | number) {
+    let update = new Date().getTime();
     return this.channel.asObservable().pipe(
       debounceTime(150),
+      tap(() => {
+        console.log('NOTIFY NOW!');
+      }),
       map((store) => {
         if (id && store[topic]) {
           return (store[topic] as any)[id];
         }
         return store[topic];
       }),
-      distinctUntilChanged((p, n) => {
-        if (p instanceof BaseModel && n instanceof BaseModel) {
-          return p.creationDate == n.creationDate;
+      filter((newData) => {
+        if (newData instanceof BaseModel && newData.updateDate == update) {
+          return false;
         }
-        return p === n;
+        update = newData.updateDate;
+        return true;
       })
+      // distinctUntilChanged((p, n) => {
+      //   if (p instanceof BaseModel && n instanceof BaseModel) {
+      //     return p.updateDate == n.updateDate;
+      //   }
+      //   return false;
+      // })
     );
   }
   private notify() {
+    console.debug('notify');
     this.channel.next(this.store);
   }
   updateShowList(shows: Show[]) {
@@ -66,18 +81,27 @@ export class SpoticastStoreService {
     show.episodes.forEach((e) => {
       this.updateEpisode(e);
     });
+    show.setUpdated();
+    this.notify();
+  }
+
+  updateUser(user: User) {
+    this.store.user = user;
+
     this.notify();
   }
   private updateEpisode(e: Episode) {
     const exist = this.store.episodes[e.id];
-    if (exist && exist.creationDate < e.creationDate) {
+    if (exist && exist.updateDate < e.updateDate) {
+      this.store.episodes[e.id] = e;
+    } else {
       this.store.episodes[e.id] = e;
     }
   }
   updatePlaylist(which: 'normal' | 'smart', playlistNew: PlaylistModel) {
     this.store.playlist[which] = playlistNew;
     this.store.playlistEpisodes = {};
-    playlistNew.tracks.forEach((e) => {
+    playlistNew.episodes.forEach((e) => {
       this.store.playlistEpisodes[e.id] = e;
     });
     this.notify();

@@ -35,4 +35,8 @@ export class Episode extends BaseModel {
   get description() {
     return this.dto.description;
   }
+
+  get resumeTime() {
+    return this.dto.resume_point?.resume_position_ms;
+  }
 }

@@ -14,8 +14,11 @@ import {
   tap,
   throwError,
 } from 'rxjs';
+import { Episode } from '../models/episode.model';
 
 import { PlaylistModel } from '../models/playlist.model';
+import { User } from '../models/user.model';
+import { SPOTIFY_CONF } from '../spotify.conf';
 import { EventService } from './event.service';
 import { SpoticastStoreService } from './spoticast-store.service';
 
@@ -23,24 +26,17 @@ import { SpoticastStoreService } from './spoticast-store.service';
   providedIn: 'root',
 })
 export class PlaylistService {
-  user: any;
-  /**
-   * The key use to store playlist
-   */
-  private STORAGE_KEY = 'spoticast_playlist';
+  private user: User | undefined;
 
+  private playlistLoaded: PlaylistModel | undefined;
   private debounceRefresh = new Subject<void>();
 
   constructor(private http: HttpClient, private store: SpoticastStoreService, private event: EventService) {
-    store.get('');
-  }
-
-  /**
-   * Return observable where you can receive the freshed playlist
-   * @returns
-   */
-  private getUpdate(): Observable<PlaylistModel | undefined> {
-    return this.notifyPlaylist.asObservable();
+    store.get('user').subscribe((user) => (this.user = user));
+    this.debounceRefresh /*TODO.pipe(debounceTime(1000*30))*/
+      .subscribe(() => {
+        this.refresh();
+      });
   }
 
   /**
@@ -117,15 +113,17 @@ export class PlaylistService {
             throw e;
           })
         )
-        .subscribe();
+        .subscribe((playlist) => {
+          this.store.updatePlaylist('normal', playlist as PlaylistModel);
+        });
     }
   }
   private clearPlaylist(playlists: PlaylistModel | undefined) {
     if (!playlists) return of();
     const tracks: any = [];
-    const trackFiltered: PlaylistEpisode[] = [];
-    playlists.tracks.forEach((e) => {
-      if (e.resume_point < 0) {
+    const trackFiltered: Episode[] = [];
+    playlists.episodes.forEach((e) => {
+      if (e.listened > 95) {
         tracks.push({ uri: e.uri });
       } else {
         trackFiltered.push(e);
@@ -136,8 +134,7 @@ export class PlaylistService {
         .delete(SPOTIFY_CONF.API.PLAYLIST_GET_TRACKS.replace(':ID', playlists.id), { body: { tracks: tracks } })
         .pipe(
           tap(() => {
-            playlists.tracks = trackFiltered;
-            this.notifyPlaylist.next(playlists);
+            playlists.episodes = trackFiltered;
           })
         );
     }
@@ -164,19 +161,14 @@ export class PlaylistService {
           map((episodes) => {
             const playlistTmp: PlaylistModel = {
               id: response.id,
-              nextTrack: response.tracks.next,
-              tracks: episodes,
+              next: response.tracks.next,
+              episodes: episodes,
               snapshot_id: response.snapshot_id,
               uri: response.uri,
             };
             return playlistTmp;
           })
         );
-      }),
-
-      tap((broadcastIt) => {
-        this.playlistLoaded = broadcastIt;
-        this.notifyPlaylist.next(broadcastIt);
       })
     );
   }
@@ -185,7 +177,7 @@ export class PlaylistService {
     const urlEpisodes = SPOTIFY_CONF.API.EPISODES;
     return this.http.get<SpotifyApi.MultipleEpisodesResponse>(urlEpisodes, { params: { ids: ids } }).pipe(
       map((episodes) => {
-        const episodesConverted: PlaylistEpisode[] = this.convertEpisodes(episodes.episodes);
+        const episodesConverted: Episode[] = this.convertEpisodes(episodes.episodes);
         return episodesConverted;
       })
     );
@@ -197,21 +189,10 @@ export class PlaylistService {
    * @returns
    */
   private convertEpisodes(response: SpotifyApi.EpisodeObject[]) {
-    const episodesConverted: PlaylistEpisode[] = [];
+    const episodesConverted: Episode[] = [];
 
     response.forEach((e) => {
-      episodesConverted.push({
-        id: e.id,
-        uri: e.uri,
-        duration_ms: e.duration_ms,
-        is_playable: e.is_playable,
-        description: e.description,
-        html_description: e.html_description,
-        images: e.images[0].url,
-        name: e.name,
-        release_date: e.release_date,
-        resume_point: e.resume_point?.fully_played ? -1 : e.resume_point?.resume_position_ms || 0,
-      });
+      episodesConverted.push(new Episode(e));
     });
 
     return episodesConverted;
@@ -229,7 +210,7 @@ export class PlaylistService {
     return this.http.get<SpotifyApi.PagingObject<SpotifyApi.PlaylistTrackObject>>(next).pipe(
       tap((response) => {
         if (this.playlistLoaded) {
-          this.playlistLoaded.nextTrack = response.next;
+          this.playlistLoaded.next = response.next;
         }
       }),
       switchMap((response) => {
@@ -239,12 +220,6 @@ export class PlaylistService {
         });
         ids = ids.substring(0, ids.length - 1);
         return this.getPlaylistEpisodes(ids);
-      }),
-      tap((episodes) => {
-        if (this.playlistLoaded) {
-          this.playlistLoaded.tracks.push(...episodes);
-          this.notifyPlaylist.next(this.playlistLoaded);
-        }
       })
     );
   }
@@ -254,7 +229,7 @@ export class PlaylistService {
    * @returns
    */
   private createPlaylist() {
-    const userId = this.userService.userProfile?.id || '-1';
+    const userId = this.user?.id || '-1';
     const url = SPOTIFY_CONF.API.PLAYLIST_CREATE.replace(':ID_USER', userId);
     const body = {
       name: SPOTIFY_CONF.PLAYLIST_spoticast,
@@ -267,11 +242,10 @@ export class PlaylistService {
         this.playlistLoaded = {
           id: playlist.id,
           snapshot_id: playlist.snapshot_id,
-          nextTrack: null,
-          tracks: [],
+          next: null,
+          episodes: [],
           uri: playlist.uri,
         };
-        this.notifyPlaylist.next(this.playlistLoaded);
         return this.playlistLoaded;
       })
     );

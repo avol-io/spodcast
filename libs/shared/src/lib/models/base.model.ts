@@ -1,7 +1,11 @@
 export class BaseModel {
-  creationDate;
+  public updateDate;
 
   constructor() {
-    this.creationDate = new Date().getTime();
+    this.updateDate = new Date().getTime();
+  }
+
+  setUpdated() {
+    this.updateDate = new Date().getTime();
   }
 }

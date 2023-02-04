@@ -5,8 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AuthModule, AuthResolver } from '@spoticast/auth';
-import { PlayerModule } from '@spoticast/player';
-import { PlaylistModule } from '@spoticast/playlist';
 import { SharedModule } from '@spoticast/shared';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
@@ -19,8 +17,8 @@ import { LayoutComponent } from './componets/layout/layout.component';
     HttpClientModule,
     AuthModule,
     SharedModule,
-    PlaylistModule,
-    PlayerModule,
+    // PlaylistModule,
+    // PlayerModule,
     RouterModule.forRoot([
       {
         path: '',
